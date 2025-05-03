@@ -1,22 +1,24 @@
-package com.example.userregistration.entity;
+package com.example.productmanagement.model;
 
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
+@Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = "username"))
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "users")
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    @Column(nullable = false, unique = true)
+    private String username;
 
-    @Column(unique = true)
     private String email;
 
     private String password;
 }
+
