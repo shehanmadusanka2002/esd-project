@@ -55,4 +55,5 @@ public class Product {
     // IMPORTANT: Ensure the actual DB column is altered if not using ddl-auto=update/create.
     @Column(name = "image_data", columnDefinition = "LONGBLOB")
     private byte[] imageData;
+
 }

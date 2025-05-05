@@ -9,6 +9,8 @@ import {
 } from 'lucide-react';
 import ProductsCreate from './ProductsCreate';
 import UserTable from './UserTable';
+import ProductTable from './ProductTable';
+
 
 // 🔹 Sample Monthly Laptop Sales Data
 const salesData = [
@@ -35,7 +37,7 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex h-screen w-screen bg-gray-100">
       {/* Sidebar */}
       <div className={`${sidebarOpen ? 'w-64' : 'w-20'} bg-indigo-700 text-white transition-all duration-300 ease-in-out`}>
         <div className="p-4 flex items-center justify-between">
@@ -71,10 +73,10 @@ export default function AdminDashboard() {
 
           <div
             className="px-4 py-3 flex items-center gap-3 text-indigo-200 rounded-lg hover:bg-red-300 cursor-pointer hover:text-black"
-            onClick={() => setActiveMenu('settings')}
+            onClick={() => setActiveMenu('showItems')}
           >
             <Settings size={20} />
-            {sidebarOpen && <span>Settings</span>}
+            {sidebarOpen && <span>ShowItems</span>}
           </div>
 
           <div
@@ -152,6 +154,7 @@ export default function AdminDashboard() {
 
           {activeMenu === 'addItems' && <ProductsCreate />}
           {activeMenu === 'regUsers' && <UserTable />}
+          {activeMenu ===  'showItems' && <ProductTable />}
         </div>
       </div>
     </div>

@@ -1,5 +1,6 @@
 package com.example.productmanagement.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,6 +12,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProductDTO {
 
     private Integer id;
@@ -40,4 +42,12 @@ public class ProductDTO {
     private Integer stockQuantity;
 
     private String imageName;
+
+    private String imageBase64;
+
+
+
+    public boolean getproductAvailable() {
+        return productAvailable;
+    }
 }

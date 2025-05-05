@@ -75,7 +75,7 @@ function ProductCreate() {
       
       // Send request to create product with image
       const response = await axios.post(
-        'http://localhost:8080/api/products/with-image',
+        'http://localhost:8080/api/product/with-image',
         productFormData,
         {
           headers: {

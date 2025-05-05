@@ -1,7 +1,9 @@
 package com.example.productmanagement.controller;
 
 import com.example.productmanagement.model.Product;
+import com.example.productmanagement.repository.ProductRepository;
 import com.example.productmanagement.service.ProductService;
+import com.example.productmanagement.dto.ProductDTO;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,20 +13,25 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/api/products")
+@RequestMapping("/api/product")
 public class ProductController {
 
     @Autowired
     private ProductService productService;
 
-    @GetMapping
-    public ResponseEntity<List<Product>> getAllProducts() {
-        return ResponseEntity.ok(productService.getAllProducts());
+    @Autowired
+    private ProductRepository productRepository;
+
+    @GetMapping("/products")
+    public ResponseEntity<List<ProductDTO>> getAllProducts() {
+        return ResponseEntity.ok(productService.getAllProductsWithImage());
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable Integer id) {
@@ -47,9 +54,31 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable Integer id, @Valid @RequestBody Product product) {
-        return ResponseEntity.ok(productService.updateProduct(id, product));
+    public ResponseEntity<?> updateProduct(@PathVariable Integer id, @RequestBody ProductDTO dto) {
+        Optional<Product> optionalProduct = productRepository.findById(id);
+        if (optionalProduct.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Product existingProduct = optionalProduct.get();
+
+        // Update only allowed fields (image not included, so leave it as-is)
+        existingProduct.setName(dto.getName());
+        existingProduct.setBrand(dto.getBrand());
+        existingProduct.setCategory(dto.getCategory());
+        existingProduct.setDescription(dto.getDescription());
+        existingProduct.setPrice(dto.getPrice());
+        existingProduct.setStockQuantity(dto.getStockQuantity());
+        existingProduct.setProductAvailable(dto.getproductAvailable());
+        existingProduct.setReleaseDate(dto.getReleaseDate());
+
+        // Don't touch imageBase64 or imageType fields here
+
+        productRepository.save(existingProduct);
+        return ResponseEntity.ok("Product updated successfully!");
     }
+
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Integer id) {

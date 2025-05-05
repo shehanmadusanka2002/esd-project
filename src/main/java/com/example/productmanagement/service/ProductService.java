@@ -2,6 +2,7 @@ package com.example.productmanagement.service;
 
 import com.example.productmanagement.exception.ResourceNotFoundException;
 import com.example.productmanagement.model.Product;
+import com.example.productmanagement.dto.ProductDTO;
 import com.example.productmanagement.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,8 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 
@@ -108,4 +111,34 @@ public class ProductService {
 
         return productRepository.save(product);
     }
+
+    public List<ProductDTO> getAllProductsWithImage() {
+        List<Product> products = productRepository.findAll();
+        List<ProductDTO> dtos = new ArrayList<>();
+
+        for (Product product : products) {
+            ProductDTO dto = new ProductDTO();
+            dto.setId(product.getId());
+            dto.setName(product.getName());
+            dto.setDescription(product.getDescription());
+            dto.setBrand(product.getBrand());
+            dto.setPrice(product.getPrice());
+            dto.setCategory(product.getCategory());
+            dto.setReleaseDate(product.getReleaseDate());
+            dto.setProductAvailable(product.isProductAvailable());
+            dto.setStockQuantity(product.getStockQuantity());
+            dto.setImageName(product.getImageName());
+
+
+            if (product.getImageData() != null) {
+                String base64Image = Base64.getEncoder().encodeToString(product.getImageData());
+                dto.setImageBase64(base64Image);
+            }
+
+            dtos.add(dto);
+        }
+
+        return dtos;
+    }
+
 }
